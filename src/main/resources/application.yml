@@ -1,0 +1,6 @@
+ipfs-endpoint: https://cloudflare-ipfs.com/ipfs/
+allowed-sizes: 200, 370
+output-dir: pub/
+springdoc:
+  api-docs:
+    path: /v1/api-docs
