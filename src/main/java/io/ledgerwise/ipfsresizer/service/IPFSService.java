@@ -25,7 +25,6 @@ public class IPFSService {
    private String ipfsEndpoint;
 
    private boolean isImage(String url) throws IOException {
-      System.out.println(url);
       HttpClient client = HttpClientBuilder.create().build();
       HttpHead request = new HttpHead(url);
       HttpResponse response = client.execute(request);
