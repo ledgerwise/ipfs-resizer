@@ -1,4 +1,4 @@
-ipfs-endpoint: https://cloudflare-ipfs.com/ipfs/
+ipfs-endpoint: https://ipfs.ledgerwise.io/ipfs/
 allowed-sizes: 200, 370
 output-dir: pub/
 springdoc:

@@ -20,15 +20,17 @@ public class StorageService {
    private String outputDir;
 
    public void saveImage(BufferedImage image, String cid) throws IOException {
-      String path = Paths.get(outputDir, cid).toString();
+      String imagePath = "%s_png".formatted(cid);
+      String path = Paths.get(outputDir, imagePath).toString();
       File outputFile = new File(path);
       outputFile.getParentFile().mkdirs();
       ImageIO.write(image, "png", outputFile);
    }
 
    public Optional<BufferedImage> getImage(String path) {
+      String imagePath = "%s_png".formatted(path);
       try {
-         BufferedImage image = ImageIO.read(new File(path));
+         BufferedImage image = ImageIO.read(new File(imagePath));
          return Optional.of(image);
       } catch (IOException e) {
          return Optional.empty();
