@@ -8,6 +8,8 @@ import java.util.Optional;
 
 import javax.imageio.ImageIO;
 
+import io.ledgerwise.ipfsresizer.model.IPFSResource;
+import io.ledgerwise.ipfsresizer.model.IPFSResourceType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Service;
@@ -41,17 +43,19 @@ public class ResizeService {
       return resizedImage;
    }
 
-   public byte[] getResource(String cid, Integer size) throws IOException {
+   public IPFSResource getResource(String cid, Integer size) throws IOException {
       String path = "%s_%s".formatted(cid, size);
       Optional<BufferedImage> existingImage = storageService.getImage(path);
 
       if (existingImage.isPresent())
-         return imageToByteArray(existingImage.get());
+         return IPFSResource.builder().cid(cid).content(imageToByteArray(existingImage.get()))
+               .type(IPFSResourceType.IMAGE).build();
 
       BufferedImage image = ipfsService.getImage(cid);
       BufferedImage scaledImage = resizeImage(image, size);
 
       storageService.saveImage(scaledImage, path);
-      return imageToByteArray(scaledImage);
+      return IPFSResource.builder().cid(cid).content(imageToByteArray(scaledImage))
+            .type(IPFSResourceType.IMAGE).build();
    }
 }
