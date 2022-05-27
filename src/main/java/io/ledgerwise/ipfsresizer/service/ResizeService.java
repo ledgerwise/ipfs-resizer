@@ -163,7 +163,7 @@ public class ResizeService {
       Optional<byte[]> videoContent = getCachedFile(videoPath);
       if (videoContent.isPresent()) {
          log.info("Returning cached file %s".formatted(videoPath));
-         return IPFSResource.builder().cid(cid).content(videoContent.get()).type(IPFSResourceType.GIF).build();
+         return IPFSResource.builder().cid(cid).content(videoContent.get()).type(IPFSResourceType.VIDEO).build();
       }
 
       IPFSResource resource = ipfsService.getResource(cid);
