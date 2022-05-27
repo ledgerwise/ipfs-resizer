@@ -105,7 +105,7 @@ public class ResizeService {
 
    byte[] resizeVideo(byte[] imageBytes, int maxSize) throws VideoException, IOException {
       String tmpPath = System.getProperty("java.io.tmpdir");
-      String tmpFilePath = "%s_%s".formatted(tmpPath, System.currentTimeMillis());
+      String tmpFilePath = "%s/%s".formatted(tmpPath, System.currentTimeMillis());
       Path tmpFile = Paths.get(tmpFilePath);
       Files.write(tmpFile, imageBytes);
 
