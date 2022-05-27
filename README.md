@@ -27,15 +27,19 @@ Configuration of the service parameters can be done through env variables or par
 - Port where the service will be running
 
   - `SERVER_PORT`
+
   - `-Dserver.port`
 
 - IPFS node endpoint (e.g. `https://cloudflare-ipfs.com/ipfs/`)
 
   - `IPFS_ENDPOINT`
+
   - `-DipfsEndpoint`
 
 - Allowed sizes (Comma separated numbers. e.g. `200,300`)
+
   - `ALLOWED_SIZES`
+
   - `-DallowedSizes`
 
 ## Local sample links
@@ -44,7 +48,7 @@ Configuration of the service parameters can be done through env variables or par
 - Allowed sizes: http://localhost:8080/api/v1/allowed_sizes
 - Sample Image: http://localhost:8080/api/v1/resized?cid=QmSzSfwKt4WpwJvBWmoLtfoCup9QgVQDyTw7zoMTvmiQjd&size=200
 - Sample GIF: http://localhost:8080/api/v1/resized?cid=QmUM8YVj2YCrC9mG4TaKapSM8Z5T3MqhQ9eJqDKdgzX5nM&size=200
-- Sample Video: http://localhost:8080/api/v1/resized?cid=QmeTK7t2JHUuXVGQh3TX5dUXh7dNUg1JoT7BYd83ZoQcb5&size=200
+- Sample Video: http://localhost:8080/api/v1/resized?cid=QmSXorBcDdxwE3kVznUPCUy6xbReQ9qzJEugPfiY614SGR/Front/Grail/DC_GRAIL_BATMAN-REBIRTH_ANIMATION_1.mp4&size=370
 
 ## Sample links
 
@@ -52,4 +56,4 @@ Configuration of the service parameters can be done through env variables or par
 - Allowed sizes: http://ipfs-resizer.ledgerwise.io/api/v1/allowed_sizes
 - Sample Image: http://ipfs-resizer.ledgerwise.io/api/v1/resized?cid=QmSzSfwKt4WpwJvBWmoLtfoCup9QgVQDyTw7zoMTvmiQjd&size=200
 - Sample GIF: http://ipfs-resizer.ledgerwise.io/api/v1/resized?cid=QmUM8YVj2YCrC9mG4TaKapSM8Z5T3MqhQ9eJqDKdgzX5nM&size=200
-- Sample Video: http://ipfs-resizer.ledgerwise.io/api/v1/resized?cid=QmeTK7t2JHUuXVGQh3TX5dUXh7dNUg1JoT7BYd83ZoQcb5&size=200
+- Sample Video: http://ipfs-resizer.ledgerwise.io/api/v1/resized?cid=QmSXorBcDdxwE3kVznUPCUy6xbReQ9qzJEugPfiY614SGR/Front/Grail/DC_GRAIL_BATMAN-REBIRTH_ANIMATION_1.mp4&size=370
