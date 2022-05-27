@@ -2,7 +2,7 @@
 
 ## Description
 
-ipfs-resizer is a services that resizes images stored in IPFS.
+ipfs-resizer is a services that resizes images, animated gifs and videos stored in IPFS (For the video functionality to work, ffmpeg executable should be installed).
 
 ## Build
 
@@ -19,6 +19,24 @@ jar
 ```bash
 java -jar target/ipfs-resizer-<version>.jar
 ```
+
+## Configuration
+
+Configuration of the service parameters can be done through env variables or parameters:
+
+- Port where the service will be running
+
+  - `SERVER_PORT`
+  - `-Dserver.port`
+
+- IPFS node endpoint (e.g. `https://cloudflare-ipfs.com/ipfs/`)
+
+  - `IPFS_ENDPOINT`
+  - `-DipfsEndpoint`
+
+- Allowed sizes (Comma separated numbers. e.g. `200,300`)
+  - `ALLOWED_SIZES`
+  - `-DallowedSizes`
 
 ## Local sample links
 

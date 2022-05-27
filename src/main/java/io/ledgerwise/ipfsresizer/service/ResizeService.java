@@ -14,11 +14,15 @@ import java.util.Optional;
 
 import javax.imageio.ImageIO;
 
-import io.ledgerwise.ipfsresizer.helper.icafe4j.image.gif.GIFTweaker;
+import io.github.techgnious.IVCompressor;
+import io.github.techgnious.dto.IVSize;
+import io.github.techgnious.dto.VideoFormats;
+import io.github.techgnious.exception.VideoException;
 import io.ledgerwise.ipfsresizer.exception.ImageConversionException;
 import io.ledgerwise.ipfsresizer.exception.NotSupportedResourceException;
 import io.ledgerwise.ipfsresizer.helper.GifDecoder;
 import io.ledgerwise.ipfsresizer.helper.GifDecoder.GifImage;
+import io.ledgerwise.ipfsresizer.helper.icafe4j.image.gif.GIFTweaker;
 import io.ledgerwise.ipfsresizer.model.IPFSResource;
 import io.ledgerwise.ipfsresizer.model.IPFSResourceType;
 import lombok.extern.slf4j.Slf4j;
@@ -86,6 +90,14 @@ public class ResizeService {
       return output.toByteArray();
    }
 
+   byte[] resizeVideo(byte[] imageBytes, int maxSize) throws VideoException {
+      IVCompressor compressor = new IVCompressor();
+      IVSize customRes = new IVSize();
+      customRes.setWidth(200);
+      customRes.setHeight(60);
+      return compressor.reduceVideoSizeWithCustomRes(imageBytes, VideoFormats.MP4, customRes);
+   }
+
    private Optional<byte[]> getCachedFile(String path) throws IOException {
       // Check if image cached
       File imageFile = new File(path);
@@ -133,6 +145,10 @@ public class ResizeService {
          case GIF:
             resource.setContent(resizeGif(resource.getContent(), size));
             resource.setCid(gifCid);
+            break;
+         case VIDEO:
+            resource.setContent(resizeVideo(resource.getContent(), size));
+            resource.setCid(videoCid);
             break;
          default:
             throw new NotSupportedResourceException("%s resource type not supported".formatted(resource.getType()),

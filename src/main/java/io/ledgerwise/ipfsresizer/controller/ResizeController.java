@@ -49,6 +49,8 @@ public class ResizeController {
       pngHttpHeaders.setContentType(MediaType.IMAGE_PNG);
       final HttpHeaders gifHttpHeaders = new HttpHeaders();
       gifHttpHeaders.setContentType(MediaType.IMAGE_GIF);
+      final HttpHeaders videoHttpHeaders = new HttpHeaders();
+      videoHttpHeaders.set("Content-Type", "video/mp4");
 
       if (allowedSizes != null && !allowedSizes.contains(size)) {
          return new ResponseEntity<>("{\"error\": \"Size not allowed\"}", jsonHttpHeaders, HttpStatus.BAD_REQUEST);
@@ -62,6 +64,8 @@ public class ResizeController {
                return new ResponseEntity<>(resource.getContent(), pngHttpHeaders, HttpStatus.OK);
             case GIF:
                return new ResponseEntity<>(resource.getContent(), gifHttpHeaders, HttpStatus.OK);
+            case VIDEO:
+               return new ResponseEntity<>(resource.getContent(), videoHttpHeaders, HttpStatus.OK);
             default:
                return new ResponseEntity<>("{\"error\": \"Resource type not supported\"}", jsonHttpHeaders,
                      HttpStatus.BAD_REQUEST);

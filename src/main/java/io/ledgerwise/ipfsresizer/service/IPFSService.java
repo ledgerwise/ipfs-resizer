@@ -1,6 +1,8 @@
 package io.ledgerwise.ipfsresizer.service;
 
 import java.io.IOException;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 
 import io.ledgerwise.ipfsresizer.exception.NotFoundException;
 import io.ledgerwise.ipfsresizer.exception.NotSupportedResourceException;
@@ -25,7 +27,7 @@ public class IPFSService {
 
    private IPFSResourceType getResourceType(String url) throws IOException {
       HttpClient client = HttpClientBuilder.create().build();
-      HttpHead request = new HttpHead(url);
+      HttpHead request = new HttpHead(URLDecoder.decode(url, StandardCharsets.UTF_8).replaceAll(" ", "%20"));
       HttpResponse response = client.execute(request);
 
       if (response.getStatusLine().getStatusCode() != 200)
@@ -45,7 +47,7 @@ public class IPFSService {
    }
 
    public IPFSResource getResource(String cid) throws IOException {
-      String url = ipfsEndpoint + cid;
+      String url = URLDecoder.decode(ipfsEndpoint + cid, StandardCharsets.UTF_8).replaceAll(" ", "%20");
 
       HttpClient client = HttpClientBuilder.create().build();
       HttpGet request = new HttpGet(url);
