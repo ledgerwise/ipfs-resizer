@@ -14,7 +14,7 @@ import java.util.Optional;
 
 import javax.imageio.ImageIO;
 
-import com.icafe4j.image.gif.GIFTweaker;
+import io.ledgerwise.ipfsresizer.helper.icafe4j.image.gif.GIFTweaker;
 import io.ledgerwise.ipfsresizer.exception.ImageConversionException;
 import io.ledgerwise.ipfsresizer.exception.NotSupportedResourceException;
 import io.ledgerwise.ipfsresizer.helper.GifDecoder;
