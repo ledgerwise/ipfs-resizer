@@ -70,7 +70,7 @@
  * WY    03Apr2014  Added snoop() as a result of delete JPEGSnoop
  */
 
-package com.icafe4j.image.jpeg;
+package io.ledgerwise.ipfsresizer.helper.icafe4j.image.jpeg;
 
 import java.awt.Transparency;
 import java.awt.color.ColorSpace;

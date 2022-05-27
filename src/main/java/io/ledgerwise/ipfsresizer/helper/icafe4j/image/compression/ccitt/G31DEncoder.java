@@ -144,7 +144,7 @@ public class G31DEncoder implements ImageEncoder {
 			// Find the index for the runLenArray
 			index = 64 + (2560 >> 6);
 			// Find the code given the runLenArray index
-			code = (color == 0) ? T4WhiteCode.fromRunLen(runLenArray[index]) : T4BlackCode.fromRunLen(runLenArray[index]);
+			code = (color == 0) ? T4WhiteCode.fromRunLen(0) : T4BlackCode.fromRunLen(0);
 			short codeValue = code.getCode();
 			int codeLen = code.getCodeLen();
 			int currRunLen = code.getRunLen();
@@ -156,7 +156,7 @@ public class G31DEncoder implements ImageEncoder {
 		}
 		while (len >= 64) {
 			index = 64 + (len >> 6);
-			code = (color == 0) ? T4WhiteCode.fromRunLen(runLenArray[index]) : T4BlackCode.fromRunLen(runLenArray[index]);
+			code = (color == 0) ? T4WhiteCode.fromRunLen(0) : T4BlackCode.fromRunLen(0);
 			send_code_to_buffer(code.getCode(), code.getCodeLen());
 			len -= code.getRunLen();
 		}
@@ -167,12 +167,12 @@ public class G31DEncoder implements ImageEncoder {
 	protected void outputRunLengthCode2(int len, int color) throws Exception {
 		// This alternative code is shorter and neater but it turns out we don't really
 		// need the search
-		int index = ArrayUtils.findEqualOrLess(runLenArray, len);
+		int index = ArrayUtils.findEqualOrLess(null, len);
 
 		// Send codes
 		while (index > 0) {
-			T4Code code = (color == 0) ? T4WhiteCode.fromRunLen(runLenArray[index])
-					: T4BlackCode.fromRunLen(runLenArray[index]);
+			T4Code code = (color == 0) ? T4WhiteCode.fromRunLen(0)
+					: T4BlackCode.fromRunLen(0);
 			short codeValue = code.getCode();
 			int codeLen = code.getCodeLen();
 			int currRunLen = code.getRunLen();
@@ -182,7 +182,7 @@ public class G31DEncoder implements ImageEncoder {
 				len -= currRunLen;
 			}
 			// Try to find smaller codes
-			index = ArrayUtils.findEqualOrLess(runLenArray, 0, index, len);
+			index = ArrayUtils.findEqualOrLess(null, 0, index, len);
 		}
 	}
 
