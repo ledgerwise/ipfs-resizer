@@ -112,7 +112,6 @@ public class ResizeService {
          return IPFSResource.builder().cid(cid).content(imageContent.get()).type(IPFSResourceType.IMAGE).build();
       }
 
-      System.out.println(gifPath);
       Optional<byte[]> gifContent = getCachedFile(gifPath);
       if (gifContent.isPresent()) {
          log.info("Returning cached file %s".formatted(gifPath));
