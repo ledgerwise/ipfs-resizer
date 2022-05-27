@@ -26,6 +26,9 @@ import io.ledgerwise.ipfsresizer.helper.icafe4j.image.gif.GIFTweaker;
 import io.ledgerwise.ipfsresizer.model.IPFSResource;
 import io.ledgerwise.ipfsresizer.model.IPFSResourceType;
 import lombok.extern.slf4j.Slf4j;
+import net.bramp.ffmpeg.FFprobe;
+import net.bramp.ffmpeg.probe.FFmpegProbeResult;
+import net.bramp.ffmpeg.probe.FFmpegStream;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
@@ -55,6 +58,16 @@ public class ResizeService {
       } catch (IOException e) {
          throw new ImageConversionException(e.toString(), null);
       }
+   }
+
+   private String findExecutableOnPath(String name) {
+      for (String dirname : System.getenv("PATH").split(File.pathSeparator)) {
+         File file = new File(dirname, name);
+         if (file.isFile() && file.canExecute()) {
+            return file.getAbsolutePath();
+         }
+      }
+      throw new AssertionError("should have found the executable");
    }
 
    byte[] resizeImage(byte[] imageBytes, int maxSize) throws IOException {
@@ -90,11 +103,28 @@ public class ResizeService {
       return output.toByteArray();
    }
 
-   byte[] resizeVideo(byte[] imageBytes, int maxSize) throws VideoException {
+   byte[] resizeVideo(byte[] imageBytes, int maxSize) throws VideoException, IOException {
+      String tmpPath = System.getProperty("java.io.tmpdir");
+      String tmpFilePath = "%s_%s".formatted(tmpPath, System.currentTimeMillis());
+      Path tmpFile = Paths.get(tmpFilePath);
+      Files.write(tmpFile, imageBytes);
+
+      FFprobe ffprobe = new FFprobe(findExecutableOnPath("ffprobe"));
+      FFmpegProbeResult probeResult = ffprobe.probe(tmpFilePath);
+      FFmpegStream stream = probeResult.getStreams().get(0);
+      System.out.println(stream.width + "x" + stream.height);
+
+      Integer currentWidth = stream.width;
+      Integer currentHeight = stream.height;
+      boolean isLandscape = currentHeight < currentWidth;
+
+      Integer targetHeight = isLandscape ? currentHeight * maxSize / currentWidth : maxSize;
+      Integer targetWidth = isLandscape ? maxSize : currentWidth * maxSize / currentHeight;
+
       IVCompressor compressor = new IVCompressor();
       IVSize customRes = new IVSize();
-      customRes.setWidth(200);
-      customRes.setHeight(60);
+      customRes.setWidth(targetWidth);
+      customRes.setHeight(targetHeight);
       return compressor.reduceVideoSizeWithCustomRes(imageBytes, VideoFormats.MP4, customRes);
    }
 
