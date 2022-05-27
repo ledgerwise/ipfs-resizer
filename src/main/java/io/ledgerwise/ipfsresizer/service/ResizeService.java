@@ -21,17 +21,22 @@ import io.ledgerwise.ipfsresizer.helper.GifDecoder;
 import io.ledgerwise.ipfsresizer.helper.GifDecoder.GifImage;
 import io.ledgerwise.ipfsresizer.model.IPFSResource;
 import io.ledgerwise.ipfsresizer.model.IPFSResourceType;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Service;
 
 @Configuration
 @Service
+@Slf4j
 public class ResizeService {
    @Autowired
    IPFSService ipfsService;
    @Autowired
    StorageService storageService;
+   @Value(value = "${output-dir}")
+   private String outputDir;
 
    private byte[] imageToByteArray(BufferedImage image) throws IOException {
       ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -88,53 +93,47 @@ public class ResizeService {
          Path _path = Paths.get(path);
          return Optional.ofNullable(Files.readAllBytes(_path));
       }
+
       return Optional.ofNullable(null);
    }
 
    public IPFSResource getResource(String cid, Integer size) throws Exception {
-
-      String path = "%s_%s".formatted(cid, size);
+      String path = "%s%s_%s".formatted(outputDir, cid, size);
       String imagePath = "%s_%s".formatted(path, "png");
       String gifPath = "%s_%s".formatted(path, "gif");
       String videoPath = "%s_%s".formatted(path, "mp4");
+      String imageCid = "%s_%s_%s".formatted(cid, size, "png");
+      String gifCid = "%s_%s_%s".formatted(cid, size, "gif");
+      String videoCid = "%s_%s_%s".formatted(cid, size, "mp4");
 
-      // Check if image cached
-      File imageFile = new File(imagePath);
-      if (imageFile.exists()) {
-         Optional<byte[]> imageContent = getCachedFile(imagePath);
-         if (imageContent.isPresent())
-            return IPFSResource.builder().cid(cid).content(imageContent.get()).type(IPFSResourceType.IMAGE).build();
+      Optional<byte[]> imageContent = getCachedFile(imagePath);
+      if (imageContent.isPresent()) {
+         log.info("Returning cached file %s".formatted(imagePath));
+         return IPFSResource.builder().cid(cid).content(imageContent.get()).type(IPFSResourceType.IMAGE).build();
       }
 
-      // Check if gif cached
-      File gifFile = new File(gifPath);
       System.out.println(gifPath);
-      if (gifFile.exists()) {
-         Optional<byte[]> gifContent = getCachedFile(imagePath);
-         if (gifContent.isPresent())
-            return IPFSResource.builder().cid(cid).content(gifContent.get())
-                  .type(IPFSResourceType.GIF).build();
+      Optional<byte[]> gifContent = getCachedFile(gifPath);
+      if (gifContent.isPresent()) {
+         log.info("Returning cached file %s".formatted(gifPath));
+         return IPFSResource.builder().cid(cid).content(gifContent.get()).type(IPFSResourceType.GIF).build();
       }
 
-      // Check if video cached
-      File videoFile = new File(videoPath);
-      System.out.println(videoPath);
-      if (videoFile.exists()) {
-         Optional<byte[]> videoContent = getCachedFile(videoPath);
-         if (videoContent.isPresent())
-            return IPFSResource.builder().cid(cid).content(videoContent.get())
-                  .type(IPFSResourceType.GIF).build();
+      Optional<byte[]> videoContent = getCachedFile(videoPath);
+      if (videoContent.isPresent()) {
+         log.info("Returning cached file %s".formatted(videoPath));
+         return IPFSResource.builder().cid(cid).content(videoContent.get()).type(IPFSResourceType.GIF).build();
       }
 
       IPFSResource resource = ipfsService.getResource(cid);
       switch (resource.getType()) {
          case IMAGE:
             resource.setContent(resizeImage(resource.getContent(), size));
-            resource.setCid(path);
+            resource.setCid(imageCid);
             break;
          case GIF:
             resource.setContent(resizeGif(resource.getContent(), size));
-            resource.setCid(gifPath);
+            resource.setCid(gifCid);
             break;
          default:
             throw new NotSupportedResourceException("%s resource type not supported".formatted(resource.getType()),

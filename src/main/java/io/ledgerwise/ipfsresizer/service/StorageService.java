@@ -12,19 +12,23 @@ import javax.imageio.ImageIO;
 
 import io.ledgerwise.ipfsresizer.exception.NotSupportedResourceException;
 import io.ledgerwise.ipfsresizer.model.IPFSResource;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Service;
 
 @Service
 @Configuration
+@Slf4j
 public class StorageService {
 
    @Value(value = "${output-dir}")
    private String outputDir;
 
-   public void saveContent(byte[] content, String cid, String suffix) throws IOException {
-      String contentPath = "%s%s_%s".formatted(outputDir, cid, suffix);
+   public void saveContent(byte[] content, String cid) throws IOException {
+      log.debug(cid);
+      String contentPath = "%s%s".formatted(outputDir, cid);
+      log.debug(contentPath);
       Path path = Paths.get(contentPath);
       Files.write(path, content);
    }
@@ -39,15 +43,13 @@ public class StorageService {
    }
 
    public void saveResource(IPFSResource resource) throws IOException {
+      log.info("Saving resource %s of type %s".formatted(resource.getCid(), resource.getType()));
       switch (resource.getType()) {
          case IMAGE:
-            saveContent(resource.getContent(), resource.getCid(), "png");
-            break;
          case GIF:
-            saveContent(resource.getContent(), resource.getCid(), "gif");
-            break;
          case VIDEO:
-            saveContent(resource.getContent(), resource.getCid(), "mp4");
+            log.debug("here");
+            saveContent(resource.getContent(), resource.getCid());
             break;
          default:
             throw new NotSupportedResourceException("%s resource type not supported".formatted(resource.getType()),
