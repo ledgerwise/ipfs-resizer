@@ -138,7 +138,7 @@ public class ResizeService {
             throw new NotSupportedResourceException("%s resource type not supported".formatted(resource.getType()),
                   null);
       }
-      System.out.println(resource.getCid());
+
       storageService.saveResource(resource);
       return resource;
    }
