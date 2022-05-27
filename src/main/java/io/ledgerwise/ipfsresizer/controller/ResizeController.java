@@ -2,6 +2,8 @@ package io.ledgerwise.ipfsresizer.controller;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 import io.ledgerwise.ipfsresizer.model.IPFSResource;
@@ -53,7 +55,8 @@ public class ResizeController {
       }
 
       try {
-         IPFSResource resource = resizeService.getResource(cid, size);
+         IPFSResource resource = resizeService.getResource(URLEncoder.encode(cid, StandardCharsets.UTF_8.toString()),
+               size);
          switch (resource.getType()) {
             case IMAGE:
                return new ResponseEntity<>(resource.getContent(), pngHttpHeaders, HttpStatus.OK);
