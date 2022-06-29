@@ -19,7 +19,7 @@ jobs:
       - name: Build with Maven
         run: |
           mvn spring-boot:build-image -Dspring-boot.build-image.imageName=${{ secrets.DOCKER_HUB_USERNAME }}/ipfs-resizer:${{ github.sha }}
-          mvn spring-boot:build-image -Dspring-boot.build-image.imageName=${{ secrets.DOCKER_HUB_USERNAME }}/ipfs-resizer:latest
+          docker tag ${{ secrets.DOCKER_HUB_USERNAME }}/ipfs-resizer:${{ github.sha }} ${{ secrets.DOCKER_HUB_USERNAME }}/ipfs-resizer:latest
       - name: docker login
         run: | # log into docker hub account
           docker login -u ${{ secrets.DOCKER_HUB_USERNAME }} -p ${{ secrets.DOCKER_HUB_TOKEN }}
