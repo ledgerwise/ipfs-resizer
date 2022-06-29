@@ -12,6 +12,12 @@ jar build
 mvn clean package spring-boot:repackage
 ```
 
+native image build
+
+```bash
+mvn spring-boot:build-image -Dspring-boot.build-image.imageName=myorg/myapp:mytag
+```
+
 ## Run
 
 jar
